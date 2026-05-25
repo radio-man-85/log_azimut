@@ -1,140 +1,870 @@
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
-
+<!DOCTYPE html>
+<html lang="fr">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta name="description" content="HTTrack is an easy-to-use website mirror utility. It allows you to download a World Wide website from the Internet to a local directory,building recursively all structures, getting html, images, and other files from the server to your computer. Links are rebuiltrelatively so that you can freely browse to the local site (works with any browser). You can mirror several sites together so that you can jump from one toanother. You can, also, update an existing mirror site, or resume an interrupted download. The robot is fully configurable, with an integrated help" />
-	<meta name="keywords" content="httrack, HTTRACK, HTTrack, winhttrack, WINHTTRACK, WinHTTrack, offline browser, web mirror utility, aspirateur web, surf offline, web capture, www mirror utility, browse offline, local  site builder, website mirroring, aspirateur www, internet grabber, capture de site web, internet tool, hors connexion, unix, dos, windows 95, windows 98, solaris, ibm580, AIX 4.0, HTS, HTGet, web aspirator, web aspirateur, libre, GPL, GNU, free software" />
-	<title>List of available projects - HTTrack Website Copier</title>
-	<!-- Mirror and index made by HTTrack Website Copier/3.49-4 [XR&CO'2014] -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>HF/VHF Logger</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Exo+2:wght@400;500;600&display=swap');
 
-	<style type="text/css">
-	<!--
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface2: #1c2230;
+    --border: #30363d;
+    --accent: #00ff9d;
+    --accent2: #00b8ff;
+    --accent3: #ff6b35;
+    --text: #e6edf3;
+    --text2: #8b949e;
+    --danger: #f85149;
+    --success: #3fb950;
+    --warn: #d29922;
+    --digi: #a371f7;
+    --radius: 6px;
+  }
 
-body {
-	margin: 0;  padding: 0;  margin-bottom: 15px;  margin-top: 8px;
-	background: #77b;
-}
-body, td {
-	font: 14px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
-	}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-#subTitle {
-	background: #000;  color: #fff;  padding: 4px;  font-weight: bold; 
-	}
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Exo 2', sans-serif;
+    font-size: 14px;
+    min-height: 100vh;
+    padding-bottom: 60px;
+  }
 
-#siteNavigation a, #siteNavigation .current {
-	font-weight: bold;  color: #448;
-	}
-#siteNavigation a:link    { text-decoration: none; }
-#siteNavigation a:visited { text-decoration: none; }
+  /* Header */
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-left { display: flex; align-items: center; gap: 10px; }
+  .logo-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+  .header h1 {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 16px;
+    color: var(--accent);
+    letter-spacing: 2px;
+  }
+  .header-stats { display: flex; gap: 12px; }
+  .stat-pill {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    color: var(--text2);
+  }
+  .stat-pill span { color: var(--accent); font-weight: 600; }
 
-#siteNavigation .current { background-color: #ccd; }
+  /* Tabs */
+  .tabs {
+    display: flex;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 16px;
+    overflow-x: auto;
+  }
+  .tab {
+    padding: 12px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text2);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
 
-#siteNavigation a:hover   { text-decoration: none;  background-color: #fff;  color: #000; }
-#siteNavigation a:active  { text-decoration: none;  background-color: #ccc; }
+  /* Content */
+  .content { padding: 16px; max-width: 900px; margin: 0 auto; }
+  .panel { display: none; }
+  .panel.active { display: block; }
 
+  /* Form */
+  .form-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  .form-card h2 {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    color: var(--text2);
+    letter-spacing: 1px;
+    margin-bottom: 14px;
+    text-transform: uppercase;
+  }
+  .form-row { display: grid; gap: 10px; margin-bottom: 10px; }
+  .form-row.col2 { grid-template-columns: 1fr 1fr; }
+  .form-row.col3 { grid-template-columns: 1fr 1fr 1fr; }
+  .form-row.col4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+  .form-group { display: flex; flex-direction: column; gap: 5px; }
+  .form-group label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text2);
+  }
+  input, select, textarea {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-family: 'Exo 2', sans-serif;
+    font-size: 14px;
+    padding: 8px 10px;
+    width: 100%;
+    transition: border-color 0.2s;
+    -webkit-appearance: none;
+  }
+  input:focus, select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(0,255,157,0.1);
+  }
+  input[id="call"], input[id="calc_my_loc"], input[id="calc_tgt_loc"] {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 16px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  input[id="calc_tgt_loc"] {
+    color: var(--accent2);
+  }
 
-a:link    { text-decoration: underline;  color: #00f; }
-a:visited { text-decoration: underline;  color: #000; }
-a:hover   { text-decoration: underline;  color: #c00; }
-a:active  { text-decoration: underline; }
+  /* Live Beam Info Box */
+  .beam-info-box {
+    background: rgba(0, 184, 255, 0.05);
+    border: 1px dashed rgba(0, 184, 255, 0.3);
+    border-radius: var(--radius);
+    padding: 14px;
+    margin-top: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 14px;
+    color: var(--text2);
+  }
+  .beam-info-box div span { color: var(--accent2); font-weight: bold; font-size: 16px; }
 
-#pageContent {
-	clear: both;
-	border-bottom: 6px solid #000;
-	padding: 10px;  padding-top: 20px;
-	line-height: 1.65em;
-	background-image: url(backblue.gif);
-	background-repeat: no-repeat;
-	background-position: top right;
-	}
+  /* Buttons */
+  .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 10px 18px;
+    border-radius: var(--radius);
+    font-family: 'Exo 2', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--text);
+    transition: all 0.15s;
+    letter-spacing: 0.3px;
+  }
+  .btn:hover { border-color: var(--text2); background: var(--surface); }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary {
+    background: rgba(0,255,157,0.1);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .btn-primary:hover { background: rgba(0,255,157,0.18); }
+  .btn-export {
+    background: rgba(0,184,255,0.08);
+    border-color: var(--accent2);
+    color: var(--accent2);
+  }
+  .btn-export:hover { background: rgba(0,184,255,0.15); }
+  .btn-danger {
+    background: rgba(248,81,73,0.08);
+    border-color: var(--danger);
+    color: var(--danger);
+  }
+  .btn-danger:hover { background: rgba(248,81,73,0.15); }
 
-#pageContent, #siteNavigation {
-	background-color: #ccd;
-	}
+  /* Filters */
+  .filter-bar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; align-items: center; }
+  .filter-label { font-size: 11px; color: var(--text2); letter-spacing: 1px; text-transform: uppercase; }
+  .filt {
+    padding: 4px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text2);
+    font-size: 12px;
+    cursor: pointer;
+    font-family: 'Exo 2', sans-serif;
+    font-weight: 500;
+    transition: all 0.15s;
+  }
+  .filt:hover { border-color: var(--text2); color: var(--text); }
+  .filt.active { border-color: var(--accent); color: var(--accent); background: rgba(0,255,157,0.07); }
 
+  /* Table */
+  .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 600px; }
+  thead th {
+    background: var(--surface2);
+    color: var(--text2);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 9px 10px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  tbody tr { border-bottom: 1px solid rgba(48,54,61,0.5); transition: background 0.1s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--surface2); }
+  tbody td { padding: 9px 10px; vertical-align: middle; }
+  .td-call {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 14px;
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+  .td-date { font-size: 11px; color: var(--text2); font-family: 'Share Tech Mono', monospace; }
+  .td-freq { font-size: 12px; font-family: 'Share Tech Mono', monospace; color: var(--accent2); }
 
-.imgLeft  { float: left;   margin-right: 10px;  margin-bottom: 10px; }
-.imgRight { float: right;  margin-left: 10px;   margin-bottom: 10px; }
+  /* Mode badges */
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+    font-family: 'Share Tech Mono', monospace;
+  }
+  .b-usb { background: rgba(0,184,255,0.15); color: var(--accent2); border: 1px solid rgba(0,184,255,0.3); }
+  .b-lsb { background: rgba(0,184,255,0.08); color: #7ec8e3; border: 1px solid rgba(0,184,255,0.2); }
+  .b-digi { background: rgba(163,113,247,0.15); color: var(--digi); border: 1px solid rgba(163,113,247,0.3); }
+  .b-cw { background: rgba(255,107,53,0.12); color: var(--accent3); border: 1px solid rgba(255,107,53,0.3); }
+  .b-am { background: rgba(210,153,34,0.12); color: var(--warn); border: 1px solid rgba(210,153,34,0.3); }
+  .b-fm { background: rgba(63,185,80,0.12); color: var(--success); border: 1px solid rgba(63,185,80,0.3); }
 
-hr { height: 1px;  color: #000;  background-color: #000;  margin-bottom: 15px; }
+  .del-btn {
+    background: none;
+    border: 1px solid transparent;
+    color: var(--text2);
+    cursor: pointer;
+    border-radius: 4px;
+    padding: 3px 7px;
+    font-size: 13px;
+    transition: all 0.15s;
+  }
+  .del-btn:hover { border-color: var(--danger); color: var(--danger); background: rgba(248,81,73,0.08); }
 
-h1 { margin: 0;  font-weight: bold;  font-size: 2em; }
-h2 { margin: 0;  font-weight: bold;  font-size: 1.6em; }
-h3 { margin: 0;  font-weight: bold;  font-size: 1.3em; }
-h4 { margin: 0;  font-weight: bold;  font-size: 1.18em; }
+  .empty-state {
+    text-align: center;
+    padding: 50px 20px;
+    color: var(--text2);
+  }
+  .empty-state .big { font-size: 36px; margin-bottom: 10px; opacity: 0.3; }
+  .empty-state p { font-size: 13px; }
 
-.blak { background-color: #000; }
-.hide { display: none; }
-.tableWidth { min-width: 400px; }
+  /* Stats panel */
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 16px; }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+    text-align: center;
+  }
+  .stat-card .val {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 28px;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat-card .lbl { font-size: 11px; color: var(--text2); letter-spacing: 1px; text-transform: uppercase; }
+  .breakdown { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .breakdown-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+  }
+  .breakdown-card h3 { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--text2); margin-bottom: 10px; }
+  .bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+  .bar-label { font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--text); min-width: 48px; }
+  .bar-track { flex: 1; height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 3px; background: var(--accent); transition: width 0.4s; }
+  .bar-count { font-size: 11px; color: var(--text2); min-width: 20px; text-align: right; }
 
-.tblRegular       { border-collapse: collapse; }
-.tblRegular td    { padding: 6px;  background-image: url(fade.gif);  border: 2px solid #99c; }
-.tblHeaderColor, .tblHeaderColor td { background: #99c; }
-.tblNoBorder td   { border: 0; }
+  /* Toast */
+  #toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+    background: var(--surface2);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 10px 20px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    color: var(--accent);
+    box-shadow: 0 0 20px rgba(0,255,157,0.15);
+    display: none;
+    z-index: 999;
+    white-space: nowrap;
+    letter-spacing: 0.5px;
+  }
 
-
-// -->
+  /* Responsive */
+  @media (max-width: 520px) {
+    .form-row.col3 { grid-template-columns: 1fr 1fr; }
+    .form-row.col4 { grid-template-columns: 1fr 1fr; }
+    .header h1 { font-size: 13px; }
+    .header-stats { display: none; }
+    .breakdown { grid-template-columns: 1fr; }
+  }
 </style>
-
 </head>
-
 <body>
-<table width="76%" border="0" align="center" cellspacing="0" cellpadding="3" class="tableWidth">
-	<tr>
-	<td id="subTitle">HTTrack Website Copier - Open Source offline browser</td>
-	</tr>
-</table>
-<table width="76%" border="0" align="center" cellspacing="0" cellpadding="0" class="tableWidth">
-<tr class="blak">
-<td>
-	<table width="100%" border="0" align="center" cellspacing="1" cellpadding="0">
-	<tr>
-	<td colspan="6"> 
-		<table width="100%" border="0" align="center" cellspacing="0" cellpadding="10">
-		<tr> 
-		<td id="pageContent"> 
-<!-- ==================== End prologue ==================== -->
 
+<div class="header">
+  <div class="header-left">
+    <div class="logo-dot"></div>
+    <h1>HF/VHF LOGGER</h1>
+  </div>
+  <div class="header-stats">
+    <div class="stat-pill">QSO: <span id="hdr-total">0</span></div>
+    <div class="stat-pill">DXCC: <span id="hdr-dxcc">0</span></div>
+  </div>
+</div>
 
-<h1 ALIGN=Center>Index of locally available projects:</H1>
-  <table border="0" width="100%" cellspacing="1" cellpadding="0">
-		<TH>
-		<BR/>
-			No categories
-		</TH>
-		<TR>
-		  <TD BACKGROUND="fade.gif">
-                    &middot; <A HREF="website/index.html">website</A>
-   		  </TD>
-		</TR>
-	</TABLE>
-	<BR>
-	<H6 ALIGN="RIGHT">
-         <I>Mirror and index made by HTTrack Website Copier [XR&CO'2008]</I>
-	</H6>
-	<!-- Mirror and index made by HTTrack Website Copier/3.49-4 [XR&CO'2014] -->
-	<!-- Thanks for using HTTrack Website Copier! -->
+<div class="tabs">
+  <div class="tab active" onclick="showTab('log', this)">📻 Nouveau QSO</div>
+  <div class="tab" onclick="showTab('journal', this)">📋 Journal</div>
+  <div class="tab" onclick="showTab('stats', this)">📊 Stats</div>
+  <div class="tab" onclick="showTab('beam', this)">🎯 Azimut & Beam</div>
+</div>
 
-<!-- ==================== Start epilogue ==================== -->
-		</td>
-		</tr>
-		</table>
-	</td>
-	</tr>
-	</table>
-</td>
-</tr>
-</table>
+<div class="content">
 
-<table width="76%" border="0" align="center" valign="bottom" cellspacing="0" cellpadding="0">
-	<tr>
-	<td id="footer"><small>&copy; 2008 Xavier Roche & other contributors - Web Design: Leto Kauler.</small></td>
-	</tr>
-</table>
+  <div class="panel active" id="panel-log">
+    <div class="form-card">
+      <h2>// Nouveau contact</h2>
+      <div class="form-row col2">
+        <div class="form-group">
+          <label>Indicatif</label>
+          <input id="call" type="text" placeholder="F4ABC" autocomplete="off" autocorrect="off" spellcheck="false">
+        </div>
+        <div class="form-group">
+          <label>Date / Heure UTC</label>
+          <div style="background: var(--surface2); border: 1px solid var(--border); padding: 8px 10px; border-radius: var(--radius); color: var(--accent); font-family: 'Share Tech Mono', monospace; font-size: 14px;">
+            ⚡ Auto-capture à l'enregistrement (Heure PC)
+          </div>
+        </div>
+      </div>
+      <div class="form-row col3">
+        <div class="form-group">
+          <label>Bande</label>
+          <select id="band" onchange="applyDefaultFrequency()">
+            <optgroup label="── HF ──">
+              <option value="160m">160m</option>
+              <option value="80m">80m</option>
+              <option value="60m">60m</option>
+              <option value="40m">40m</option>
+              <option value="30m">30m</option>
+              <option value="20m">20m</option>
+              <option value="17m">17m</option>
+              <option value="15m">15m</option>
+              <option value="12m">12m</option>
+              <option value="10m" selected>10m</option>
+            </optgroup>
+            <optgroup label="── VHF/UHF ──">
+              <option value="6m">6m</option>
+              <option value="2m">2m</option>
+              <option value="70cm">70cm</option>
+              <option value="23cm">23cm</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Fréquence (MHz)</label>
+          <input id="freq" type="number" step="0.001" placeholder="28.000">
+        </div>
+        <div class="form-group">
+          <label>Mode</label>
+          <select id="mode">
+            <optgroup label="── Phonie ──">
+              <option>USB</option><option>LSB</option><option>AM</option><option>FM</option>
+            </optgroup>
+            <optgroup label="── Digital ──">
+              <option>FT8</option><option>FT4</option><option>WSPR</option>
+              <option>PSK31</option><option>JS8</option><option>RTTY</option>
+            </optgroup>
+            <optgroup label="── CW ──">
+              <option>CW</option>
+            </optgroup>
+          </select>
+        </div>
+      </div>
+      <div class="form-row col4">
+        <div class="form-group">
+          <label>RST Envoyé</label>
+          <input id="rst_sent" type="text" placeholder="59" maxlength="3" value="59">
+        </div>
+        <div class="form-group">
+          <label>RST Reçu</label>
+          <input id="rst_rcvd" type="text" placeholder="59" maxlength="3" value="59">
+        </div>
+        <div class="form-group">
+          <label>Nom</label>
+          <input id="name" type="text" placeholder="Pierre">
+        </div>
+        <div class="form-group">
+          <label>QTH</label>
+          <input id="qth" type="text" placeholder="Paris">
+        </div>
+      </div>
+      <div class="form-row" style="margin-bottom:14px;">
+        <div class="form-group">
+          <label>Remarques</label>
+          <input id="comment" type="text" placeholder="Conditions, antenne, puissance...">
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="addQso()">＋ Ajouter QSO</button>
+        <button class="btn btn-export" onclick="exportAdif()">⬇ Exporter ADIF</button>
+        <button class="btn btn-danger" onclick="clearAll()">✕ Effacer tout</button>
+      </div>
+    </div>
 
+    <div class="form-card">
+      <h2>// Derniers QSO</h2>
+      <div id="recent-list"></div>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-journal">
+    <div class="filter-bar">
+      <span class="filter-label">Filtre :</span>
+      <button class="filt active" onclick="setFilter('all',this)">Tous</button>
+      <button class="filt" onclick="setFilter('HF',this)">HF</button>
+      <button class="filt" onclick="setFilter('VHF',this)">VHF/UHF</button>
+      <button class="filt" onclick="setFilter('USB',this)">USB</button>
+      <button class="filt" onclick="setFilter('LSB',this)">LSB</button>
+      <button class="filt" onclick="setFilter('DIGI',this)">Digital</button>
+      <button class="filt" onclick="setFilter('CW',this)">CW</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Indicatif</th>
+            <th>Date UTC</th>
+            <th>Bande</th>
+            <th>Fréq.</th>
+            <th>Mode</th>
+            <th>RST S/R</th>
+            <th>Nom / QTH</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="log-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-stats">
+    <div class="stats-grid" id="stats-grid"></div>
+    <div class="breakdown" id="breakdown"></div>
+  </div>
+
+  <div class="panel" id="panel-beam">
+    <div class="form-card">
+      <h2>// Calculateur de trajectoire d'Antenne</h2>
+      <div class="form-row col2">
+        <div class="form-group">
+          <label>Mon Locator (Départ)</label>
+          <input id="calc_my_loc" type="text" value="IN96GP" maxlength="8" placeholder="IN96GP" oninput="calculerTrajectoire()">
+        </div>
+        <div class="form-group">
+          <label>Locator Distant (Arrivée)</label>
+          <input id="calc_tgt_loc" type="text" maxlength="8" placeholder="JN08KQ" oninput="calculerTrajectoire()">
+        </div>
+      </div>
+
+      <div class="beam-info-box">
+        <div>Azimut Réel : <span id="beam-az">-</span></div>
+        <div>Direction Cardinale : <span id="beam-dir">-</span></div>
+        <div>Distance Estimée : <span id="beam-dist">-</span></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div id="toast"></div>
+
+<script>
+const DIGI = ['FT8','FT4','WSPR','PSK31','JS8','RTTY'];
+const VHF_BANDS = ['6m','2m','70cm','23cm'];
+
+// Base de données des fréquences par défaut (MHz)
+const DEFAULT_FREQS = {
+  '160m': '1.800', '80m': '3.500', '60m': '5.351', '40m': '7.000',
+  '30m': '10.100', '20m': '14.000', '17m': '18.068', '15m': '21.000',
+  '12m': '24.890', '10m': '28.000', '6m': '50.000', '2m': '144.000',
+  '70cm': '430.000', '23cm': '1296.000'
+};
+
+let qsos = [];
+let activeFilter = 'all';
+
+function load() {
+  try { qsos = JSON.parse(localStorage.getItem('hfvhf_qsos') || '[]'); } catch(e) { qsos = []; }
+  applyDefaultFrequency();
+}
+function save() {
+  try { localStorage.setItem('hfvhf_qsos', JSON.stringify(qsos)); } catch(e) {}
+}
+
+function applyDefaultFrequency() {
+  const currentBand = document.getElementById('band').value;
+  if (DEFAULT_FREQS[currentBand]) {
+    document.getElementById('freq').value = DEFAULT_FREQS[currentBand];
+    document.getElementById('freq').placeholder = DEFAULT_FREQS[currentBand];
+  }
+}
+
+function nowUtc() {
+  const d = new Date();
+  const p = n => String(n).padStart(2,'0');
+  return `${d.getUTCFullYear()}-${p(d.getUTCMonth()+1)}-${p(d.getUTCDate())}T${p(d.getUTCHours())}:${p(d.getUTCMinutes())}`;
+}
+
+function addQso() {
+  const call = document.getElementById('call').value.trim().toUpperCase();
+  if (!call) { showToast('! Entrez un indicatif'); return; }
+  
+  const q = {
+    id: Date.now(),
+    call,
+    datetime: nowUtc(),
+    band: document.getElementById('band').value,
+    freq: document.getElementById('freq').value || '',
+    mode: document.getElementById('mode').value,
+    rst_sent: document.getElementById('rst_sent').value || '59',
+    rst_rcvd: document.getElementById('rst_rcvd').value || '59',
+    name: document.getElementById('name').value.trim(),
+    qth: document.getElementById('qth').value.trim(),
+    comment: document.getElementById('comment').value.trim()
+  };
+  
+  qsos.unshift(q);
+  save();
+  
+  ['call','name','qth','comment'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('rst_sent').value = '59';
+  document.getElementById('rst_rcvd').value = '59';
+  applyDefaultFrequency();
+  
+  renderAll();
+  showToast('QSO ' + call + ' enregistré ✓');
+}
+
+function deleteQso(id) {
+  qsos = qsos.filter(q => q.id !== id);
+  save(); renderAll();
+}
+
+function clearAll() {
+  if (!qsos.length) return;
+  if (confirm('Effacer les ' + qsos.length + ' QSO du journal ?')) {
+    qsos = []; save(); renderAll();
+  }
+}
+
+function setFilter(f, btn) {
+  activeFilter = f;
+  document.querySelectorAll('.filt').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderLog();
+}
+
+function badgeClass(mode) {
+  if (mode === 'USB') return 'b-usb';
+  if (mode === 'LSB') return 'b-lsb';
+  if (DIGI.includes(mode)) return 'b-digi';
+  if (mode === 'CW') return 'b-cw';
+  if (mode === 'AM') return 'b-am';
+  if (mode === 'FM') return 'b-fm';
+  return 'b-usb';
+}
+
+function filterList() {
+  return qsos.filter(q => {
+    if (activeFilter === 'all') return true;
+    if (activeFilter === 'HF') return !VHF_BANDS.includes(q.band);
+    if (activeFilter === 'VHF') return VHF_BANDS.includes(q.band);
+    if (activeFilter === 'DIGI') return DIGI.includes(q.mode);
+    return q.mode === activeFilter;
+  });
+}
+
+function renderLog() {
+  const list = filterList();
+  const tbody = document.getElementById('log-body');
+  if (!list.length) {
+    tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="big">📻</div><p>Aucun QSO${activeFilter !== 'all' ? ' pour ce filtre' : ''}</p></div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = list.map(q => {
+    const dt = (q.datetime || '').replace('T',' ').slice(0,16);
+    const nq = q.name && q.qth ? q.name + ' / ' + q.qth : (q.name || q.qth || '-');
+    return `<tr>
+      <td class="td-call">${q.call}</td>
+      <td class="td-date">${dt}</td>
+      <td>${q.band}</td>
+      <td class="td-freq">${q.freq ? q.freq : '-'}</td>
+      <td><span class="badge ${badgeClass(q.mode)}">${q.mode}</span></td>
+      <td style="font-family:'Share Tech Mono',monospace;font-size:12px;">${q.rst_sent}/${q.rst_rcvd}</td>
+      <td style="font-size:12px;color:var(--text2);">${nq}</td>
+      <td><button class="del-btn" onclick="deleteQso(${q.id})">✕</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function renderRecent() {
+  const el = document.getElementById('recent-list');
+  const last = qsos.slice(0, 5);
+  if (!last.length) {
+    el.innerHTML = '<div style="color:var(--text2);font-size:12px;padding:10px 0;">Aucun QSO enregistré</div>';
+    return;
+  }
+  el.innerHTML = last.map(q => {
+    const dt = (q.datetime || '').replace('T',' ').slice(0,16);
+    return `<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);">
+      <span style="font-family:'Share Tech Mono',monospace;font-size:14px;color:var(--accent);min-width:90px;">${q.call}</span>
+      <span class="badge ${badgeClass(q.mode)}">${q.mode}</span>
+      <span style="font-size:12px;color:var(--accent2);">${q.band}</span>
+      <span style="font-size:11px;color:var(--text2);margin-left:auto;">${dt}</span>
+    </div>`;
+  }).join('');
+}
+
+function renderStats() {
+  const total = qsos.length;
+  const calls = new Set(qsos.map(q => q.call));
+  const pfxSet = new Set(qsos.map(q => q.call.replace(/[0-9].*/, '')));
+  const hf = qsos.filter(q => !VHF_BANDS.includes(q.band)).length;
+  const vhf = qsos.filter(q => VHF_BANDS.includes(q.band)).length;
+  const digi = qsos.filter(q => DIGI.includes(q.mode)).length;
+
+  document.getElementById('stats-grid').innerHTML = [
+    ['Total QSO', total, 'var(--accent)'],
+    ['Indicatifs uniques', calls.size, 'var(--accent2)'],
+    ['Préfixes DXCC', pfxSet.size, 'var(--digi)'],
+    ['HF', hf, 'var(--warn)'],
+    ['VHF/UHF', vhf, 'var(--success)'],
+    ['Digital', digi, 'var(--accent3)'],
+  ].map(([l,v,c]) => `<div class="stat-card">
+    <div class="val" style="color:${c}">${v}</div>
+    <div class="lbl">${l}</div>
+  </div>`).join('');
+
+  const bandCounts = {};
+  qsos.forEach(q => { bandCounts[q.band] = (bandCounts[q.band]||0)+1; });
+  const sortedBands = Object.entries(bandCounts).sort((a,b) => b[1]-a[1]).slice(0,8);
+  const maxB = sortedBands[0]?.[1] || 1;
+
+  const modeCounts = {};
+  qsos.forEach(q => { modeCounts[q.mode] = (modeCounts[q.mode]||0)+1; });
+  const sortedModes = Object.entries(modeCounts).sort((a,b) => b[1]-a[1]).slice(0,8);
+  const maxM = sortedModes[0]?.[1] || 1;
+
+  document.getElementById('breakdown').innerHTML = `
+    <div class="breakdown-card">
+      <h3>Par bande</h3>
+      ${sortedBands.map(([b,c]) => `<div class="bar-row">
+        <span class="bar-label">${b}</span>
+        <div class="bar-track"><div class="bar-fill" style="width:${Math.round(c/maxB*100)}%;background:var(--accent2)"></div></div>
+        <span class="bar-count">${c}</span>
+      </div>`).join('') || '<span style="color:var(--text2);font-size:12px;">Aucune donnée</span>'}
+    </div>
+    <div class="breakdown-card">
+      <h3>Par mode</h3>
+      ${sortedModes.map(([m,c]) => `<div class="bar-row">
+        <span class="bar-label">${m}</span>
+        <div class="bar-track"><div class="bar-fill" style="width:${Math.round(c/maxM*100)}%;background:var(--digi)"></div></div>
+        <span class="bar-count">${c}</span>
+      </div>`).join('') || '<span style="color:var(--text2);font-size:12px;">Aucune donnée</span>'}
+    </div>`;
+}
+
+function renderHeader() {
+  document.getElementById('hdr-total').textContent = qsos.length;
+  const pfx = new Set(qsos.map(q => q.call.replace(/[0-9].*/,'')));
+  document.getElementById('hdr-dxcc').textContent = pfx.size;
+}
+
+function renderAll() {
+  renderHeader(); renderRecent(); renderLog(); renderStats();
+}
+
+function showTab(t, element) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  
+  document.getElementById('panel-' + t).classList.add('active');
+  element.classList.add('active');
+  
+  if (t === 'stats') renderStats();
+}
+
+// --- ENGINE MAIDENHEAD (AZIMUT ET GEOGRAPHIE) ---
+function maidenheadToLatLon(locator) {
+  const loc = locator.trim().toUpperCase();
+  const regex = /^[A-X]{2}[0-9]{2}([A-X]{2}([0-9]{2})?)?$/;
+  if (!regex.test(loc)) return null;
+
+  let lon = (loc.charCodeAt(0) - 65) * 20.0 - 180.0;
+  let lat = (loc.charCodeAt(1) - 65) * 10.0 - 90.0;
+  let lon_step = 20.0, lat_step = 10.0;
+
+  lon_step /= 10; lat_step /= 10;
+  lon += (loc.charCodeAt(2) - 48) * lon_step;
+  lat += (loc.charCodeAt(3) - 48) * lat_step;
+
+  if (loc.length >= 6) {
+    lon_step /= 24; lat_step /= 24;
+    lon += (loc.charCodeAt(4) - 65) * lon_step;
+    lat += (loc.charCodeAt(5) - 65) * lat_step;
+  }
+  if (loc.length === 8) {
+    lon_step /= 10; lat_step /= 10;
+    lon += (loc.charCodeAt(6) - 48) * lon_step;
+    lat += (loc.charCodeAt(7) - 48) * lat_step;
+  }
+
+  lon += lon_step / 2.0;
+  lat += lat_step / 2.0;
+  return { lat, lon };
+}
+
+function calcAzimut(lat1, lon1, lat2, lon2) {
+  const rLat1 = lat1 * Math.PI / 180;
+  const rLat2 = lat2 * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+
+  const x = Math.sin(dLon) * Math.cos(rLat2);
+  const y = Math.cos(rLat1) * Math.sin(rLat2) - Math.sin(rLat1) * Math.cos(rLat2) * Math.cos(dLon);
+  const az = Math.atan2(x, y) * 180 / Math.PI;
+  return (az + 360) % 360;
+}
+
+function calcDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371.0;
+  const rLat1 = lat1 * Math.PI / 180;
+  const rLat2 = lat2 * Math.PI / 180;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+
+  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(rLat1) * Math.cos(rLat2) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  return R * 2 * Math.asin(Math.sqrt(a));
+}
+
+function azimutToDirection(az) {
+  const dirs = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSO", "SO", "OSO", "O", "ONO", "NO", "NNO"];
+  return dirs[Math.round(az / 22.5) % 16];
+}
+
+function calculerTrajectoire() {
+  const myLoc = document.getElementById('calc_my_loc').value;
+  const tgtLoc = document.getElementById('calc_tgt_loc').value;
+  
+  const coord1 = maidenheadToLatLon(myLoc);
+  const coord2 = maidenheadToLatLon(tgtLoc);
+
+  if (!coord1 || !coord2) {
+    document.getElementById('beam-az').textContent = "-";
+    document.getElementById('beam-dir').textContent = "-";
+    document.getElementById('beam-dist').textContent = "-";
+    return;
+  }
+
+  const az = calcAzimut(coord1.lat, coord1.lon, coord2.lat, coord2.lon);
+  const dist = calcDistance(coord1.lat, coord1.lon, coord2.lat, coord2.lon);
+  const dir = azimutToDirection(az);
+
+  document.getElementById('beam-az').textContent = az.toFixed(1) + "°";
+  document.getElementById('beam-dir').textContent = dir;
+  document.getElementById('beam-dist').textContent = dist.toFixed(1) + " km";
+}
+
+function exportAdif() {
+  if (!qsos.length) { showToast('! Aucun QSO à exporter'); return; }
+  let adif = 'ADIF Export\n<ADIF_VER:5>3.1.4\n<PROGRAMID:12>HF-VHF-Logger\n<EOH>\n\n';
+  qsos.forEach(q => {
+    const raw = (q.datetime||'').replace('T','').replace(/-/g,'').replace(/:/g,'');
+    const dateStr = raw.slice(0,8) || '19700101';
+    const timeStr = raw.slice(8,12) || '0000';
+    const f = (tag, val) => val ? `<${tag}:${val.length}>${val} ` : '';
+    adif += f('CALL', q.call);
+    adif += f('QSO_DATE', dateStr);
+    adif += f('TIME_ON', timeStr);
+    adif += f('BAND', q.band);
+    adif += f('FREQ', q.freq);
+    adif += f('MODE', q.mode);
+    adif += f('RST_SENT', q.rst_sent);
+    adif += f('RST_RCVD', q.rst_rcvd);
+    adif += f('NAME', q.name);
+    adif += f('QTH', q.qth);
+    adif += f('COMMENT', q.comment);
+    adif += '<EOR>\n';
+  });
+  const blob = new Blob([adif], {type:'text/plain'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'log_' + new Date().toISOString().slice(0,10) + '.adi';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  showToast(qsos.length + ' QSO exportés → .adi');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.style.display = 'block';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => { t.style.display = 'none'; }, 2500);
+}
+
+load(); renderAll();
+</script>
 </body>
-
 </html>
-
-
